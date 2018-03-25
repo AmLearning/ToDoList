@@ -49,7 +49,7 @@ class ToDoListViewController: UITableViewController {
         
         //first, check to see if the cell has data or is empty. If empty allow input
         if tableView.cellForRow(at: indexPath)?.textLabel?.text?.isEmpty == true {
-            ifSelectedRowIsEmpty(at: <#T##IndexPath#>)
+            ifSelectedRowIsEmpty(at: indexPath)
         }
         
         tableView.deselectRow(at: indexPath, animated: true)    //this makes highlight go away after clicking on cell
