@@ -17,10 +17,10 @@ class ToDoListViewController: UITableViewController {
         //since using TableViewController, no need to set self as delegate for TableViewDelegate and TableViewDataSource
         
         //at the start, populate array to test things out
-        listArray.append("test1"); listArray.append("test2"); listArray.append("test3")
+        //listArray.append("test1"); listArray.append("test2"); listArray.append("test3")
         
         
-        
+        loadData()
     }
 //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooodf
     
@@ -59,7 +59,7 @@ class ToDoListViewController: UITableViewController {
     }//end didSelectRowAt
     
     
-    //MARK: - @IBAction functions
+    //MARK: - ADD NEW ITEM TO LIST
     
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
         addNewItem()
@@ -78,6 +78,7 @@ class ToDoListViewController: UITableViewController {
             if let userInput = textField.text {
                 self.listArray.append(userInput)
                 self.tableView.reloadData()
+                self.saveData()
             }else {
                 print ("nothing entered")
             }//end if-else
@@ -91,10 +92,21 @@ class ToDoListViewController: UITableViewController {
     
     
     //MARK: - save data in UserDefault
-    
+    func saveData (){
+        let defaults = UserDefaults.standard
+        
+        defaults.set(listArray, forKey: "listArrayData")
+    }
     
     
     //MARK: - load UserDefaults
+    func loadData (){
+        let defaults = UserDefaults.standard
+        
+        if let list = defaults.array(forKey: "listArrayData") as? [String]{
+            listArray = list
+        }
+    }
 
 }//end class
 
