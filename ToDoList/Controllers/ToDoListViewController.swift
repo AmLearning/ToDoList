@@ -7,7 +7,8 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    var listArray = [String]()  //array to hold cell data (ToDos)
+//    var listArray = [String]()  //array to hold cell data (ToDos)
+    var listArray = [Item]()       //change to have custom item so we can associate properties with it, in this case, the checkmark.  since we reuse cells, it appears in the reused cell if in top cell, so we want to be able to associate it with the data, not the cell.
     
 
     
@@ -18,7 +19,8 @@ class ToDoListViewController: UITableViewController {
         
         //at the start, populate array to test things out
         //listArray.append("test1"); listArray.append("test2"); listArray.append("test3")
-        
+        var item1 = Item(); item1.title = "item1"
+        listArray.append(item1)
         
         loadData()
     }
@@ -31,7 +33,7 @@ class ToDoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //Here, we cast to the CustomMessageCell type because using the custom cell....since default prototype, no cast as in Chat.
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
-        cell.textLabel?.text = listArray[indexPath.row]
+        cell.textLabel?.text = listArray[indexPath.row].title
         
         return cell
     }//end cellForRowAt
@@ -76,9 +78,12 @@ class ToDoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             if let userInput = textField.text {
-                self.listArray.append(userInput)
+                var newItem = Item()
+                newItem.title = userInput
+                
+                self.listArray.append(newItem)
                 self.tableView.reloadData()
-                self.saveData()
+//                self.saveData()
             }else {
                 print ("nothing entered")
             }//end if-else
@@ -103,7 +108,7 @@ class ToDoListViewController: UITableViewController {
     func loadData (){
         let defaults = UserDefaults.standard
         
-        if let list = defaults.array(forKey: "listArrayData") as? [String]{
+        if let list = defaults.array(forKey: "listArrayData") as? [Item] {
             listArray = list
         }
     }
