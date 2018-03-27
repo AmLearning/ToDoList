@@ -47,11 +47,6 @@ class ToDoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
        // print ("row \(indexPath) selected")
         
-        //first, check to see if the cell has data or is empty. If empty allow input
-        if tableView.cellForRow(at: indexPath)?.textLabel?.text?.isEmpty == true {
-            ifSelectedRowIsEmpty(at: indexPath)
-        }
-        
         tableView.deselectRow(at: indexPath, animated: true)    //this makes highlight go away after clicking on cell
         
         //This accesses the checkmark Accessory (in storyboard Attribute insp) and makes it appear and disappear to show something has been selected or deselected.
@@ -63,12 +58,43 @@ class ToDoListViewController: UITableViewController {
         
     }//end didSelectRowAt
     
-    func ifSelectedRowIsEmpty (at: IndexPath){
-        
+    
+    //MARK: - @IBAction functions
+    
+    @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
+        addNewItem()
     }
     
+    func addNewItem (){
+        var textField = UITextField()
+        let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Type in New Item Here"
+            textField = alertTextField
+        }//end addTextField
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            if let userInput = textField.text {
+                self.listArray.append(userInput)
+                self.tableView.reloadData()
+            }else {
+                print ("nothing entered")
+            }//end if-else
+            
+        }//end action
+        
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
+
+    }//end addNewItem
     
     
+    //MARK: - save data in UserDefault
+    
+    
+    
+    //MARK: - load UserDefaults
 
 }//end class
 

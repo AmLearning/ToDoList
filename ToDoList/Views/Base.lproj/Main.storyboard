@@ -32,7 +32,14 @@
                             <outlet property="delegate" destination="eBD-gh-Lnu" id="wna-iu-YpV"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="pJU-Rx-PY6"/>
+                    <navigationItem key="navigationItem" id="pJU-Rx-PY6">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Z1t-AT-ACv">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addButtonTapped:" destination="eBD-gh-Lnu" id="86i-BO-g6Z"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nmc-02-qgY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -46,6 +53,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="XSy-h1-0bs">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.71314147829999996" green="0.7836924381" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
