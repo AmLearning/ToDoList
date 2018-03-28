@@ -11,6 +11,9 @@ class ToDoListViewController: UITableViewController {
     var listArray = [Item]()       //change to have custom item so we can associate properties with it, in this case, the checkmark.  since we reuse cells, it appears in the reused cell if in top cell, so we want to be able to associate it with the data, not the cell.
     
 
+    //1. To use NSCoder to store data, first create file path do .plist directory
+//    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ToDoListItems.plist")
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ToDoListItems.plist")
     
 //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
     override func viewDidLoad() {
@@ -21,8 +24,9 @@ class ToDoListViewController: UITableViewController {
         //listArray.append("test1"); listArray.append("test2"); listArray.append("test3")
         var item1 = Item(); item1.title = "item1"
         
-        
-//        loadData()
+//        loadDataFromUserDefault()
+        print (dataFilePath)
+        loadItemsFromPList()
     }
 //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooodf
     
@@ -64,7 +68,9 @@ class ToDoListViewController: UITableViewController {
 
         //Toggle .done in Item (checkmark)
         listArray[indexPath.row].done = !listArray[indexPath.row].done  //replaces if/then below
-        self.tableView.reloadData()
+        
+        saveItemsToPList()
+        //self.tableView.reloadData()//moved to saveItemsToPlist()
 //
 //        if listArray[indexPath.row].done == true {//replaced by above for elegance!
 //            listArray[indexPath.row].done == false
@@ -104,7 +110,8 @@ class ToDoListViewController: UITableViewController {
                 
                 self.listArray.append(newItem)
                 self.tableView.reloadData()
-//                self.saveData()
+//                self.saveDataToUserDefault()
+                self.saveItemsToPList()
             }else {
                 print ("nothing entered")
             }//end if-else
@@ -118,17 +125,54 @@ class ToDoListViewController: UITableViewController {
     
     
     
-//////////////////////////////////switch to custom Item.UserDefaults no longer works/////////////////
+    //MARK: - save data via NSCoder
+    func saveItemsToPList(){
+        let encoder = PropertyListEncoder()
+        
+        do{
+        let data = try encoder.encode(listArray)
+            try data.write(to: dataFilePath!)
+        }catch {
+            print ("Error encoding listArray: \(error)")
+        }
+
+        tableView.reloadData()
+    }//end save data
+    
+    //MARK: - load data saved via NSCoder
+    func loadItemsFromPList(){
+        let decoder = PropertyListDecoder()
+        
+        //get data.  Data() may throw, try.  Angela showed a way to combine optional binding with try statement
+//        if let data = try? Data(contentsOf: dataFilePath!){
+//            do {
+//                listArray = try decoder.decode([Item].self, from: data)
+//            }catch {
+//                print ("Error decoding listArray: \(error)")
+//            }
+//        }//end optional binding
+
+        do {
+            let data = try Data(contentsOf: dataFilePath!)
+            listArray = try decoder.decode([Item].self, from: data)
+        }catch{
+            //print ("Error decoding listArray: \(error)")
+        }
+        
+        
+    }//end load data
+    
+//////////////////////////////////switch to custom Item. UserDefaults no longer works/////////////////
     
 //MARK: - save data in UserDefault
-//    func saveData (){
+//    func saveDataToUserDefault (){
 //        let defaults = UserDefaults.standard
 //
 //        defaults.set(listArray, forKey: "listArrayData")
 //    }
     
 //MARK: - load UserDefaults
-//    func loadData (){
+//    func loadDataFromUserDefault (){
 //        let defaults = UserDefaults.standard
 //
 //        if let list = defaults.array(forKey: "listArrayData") as? [Item] {
