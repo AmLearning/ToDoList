@@ -20,21 +20,34 @@ class ToDoListViewController: UITableViewController {
         //at the start, populate array to test things out
         //listArray.append("test1"); listArray.append("test2"); listArray.append("test3")
         var item1 = Item(); item1.title = "item1"
-        listArray.append(item1)
         
-        loadData()
+        
+//        loadData()
     }
 //oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooodf
     
     
     
     
-    //MARK: - TableView DataSource Methods:  two required.  cellForRowAt and numberOfRowsInSection
+//MARK: - TableView DataSource Methods:  two required.  cellForRowAt and numberOfRowsInSection
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //Here, we cast to the CustomMessageCell type because using the custom cell....since default prototype, no cast as in Chat.
         let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
-        cell.textLabel?.text = listArray[indexPath.row].title
+        let item = listArray[indexPath.row]
         
+        cell.textLabel?.text = item.title
+        
+        //check hidden/shown depending on state of .done property
+        if item.done == true {
+            cell.accessoryType = .checkmark
+        }else {
+            cell.accessoryType = .none
+        }
+        //the above could be shortened by using ternary operator
+//        item.done ? (cell.accessoryType = .checkmark) : (cell.accessoryType = .none)
+//        or
+//        cell.accessoryType = item.done ? .checkmark : .none
+
         return cell
     }//end cellForRowAt
     
@@ -44,25 +57,33 @@ class ToDoListViewController: UITableViewController {
     }
     
     
-    //MARK: - TableView Delegate Methods:
-    //this functon detects which row user selects
+//MARK: - TableView Delegate Methods:
+    //this functon detects which row/cell user selects
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       // print ("row \(indexPath) selected")
-        
         tableView.deselectRow(at: indexPath, animated: true)    //this makes highlight go away after clicking on cell
+
+        //Toggle .done in Item (checkmark)
+        listArray[indexPath.row].done = !listArray[indexPath.row].done  //replaces if/then below
+        self.tableView.reloadData()
+//
+//        if listArray[indexPath.row].done == true {//replaced by above for elegance!
+//            listArray[indexPath.row].done == false
+//        }else{
+//            listArray[indexPath.row].done == true
+//        }
         
-        //This accesses the checkmark Accessory (in storyboard Attribute insp) and makes it appear and disappear to show something has been selected or deselected.
-        if tableView.cellForRow(at: indexPath)?.accessoryType != .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        }//end accessory if/else
+        //-----------------------REPLACED WHEN CREATED CUSTOM ITEM TO LINK CHECK TO DATA----------------------
+//        This accesses the checkmark Accessory (in storyboard Attribute insp) and makes it appear and disappear to show something has been selected or deselected.
+//        if tableView.cellForRow(at: indexPath)?.accessoryType != .checkmark {
+//            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+//        } else {
+//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+//        }//end accessory if/else
         
     }//end didSelectRowAt
     
     
-    //MARK: - ADD NEW ITEM TO LIST
-    
+//MARK: - ADD NEW ITEM TO LIST
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
         addNewItem()
     }
@@ -96,22 +117,24 @@ class ToDoListViewController: UITableViewController {
     }//end addNewItem
     
     
-    //MARK: - save data in UserDefault
-    func saveData (){
-        let defaults = UserDefaults.standard
-        
-        defaults.set(listArray, forKey: "listArrayData")
-    }
     
+//////////////////////////////////switch to custom Item.UserDefaults no longer works/////////////////
     
-    //MARK: - load UserDefaults
-    func loadData (){
-        let defaults = UserDefaults.standard
-        
-        if let list = defaults.array(forKey: "listArrayData") as? [Item] {
-            listArray = list
-        }
-    }
+//MARK: - save data in UserDefault
+//    func saveData (){
+//        let defaults = UserDefaults.standard
+//
+//        defaults.set(listArray, forKey: "listArrayData")
+//    }
+    
+//MARK: - load UserDefaults
+//    func loadData (){
+//        let defaults = UserDefaults.standard
+//
+//        if let list = defaults.array(forKey: "listArrayData") as? [Item] {
+//            listArray = list
+//        }
+//    }
 
 }//end class
 
